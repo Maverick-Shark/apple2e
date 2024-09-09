@@ -11,29 +11,29 @@
 -- License:     GPL 3.0 - Free to use, distribute and change to your own needs.
 --              Leaving a reference to the author will be highly appreciated.
 -------------------------------------------------------------------------------
---                        VIA 6522
---             +-------------------------+
---     VCC     | 1                       40 | GND
---     D0      | 2                       39 | D1
---     D2      | 3                       38 | D3
---     D4      | 4                       37 | D5
---     D6      | 5                       36 | D7
---     A0      | 6                       35 | A1
---     A2      | 7                       34 | A3
---     R/W     | 8                       33 | PHI2
---     CA1     | 9                       32 | CA2
---     PA0     |10                       31 | PA1
---     PA2     |11                       30 | PA3
---     PA4     |12                       29 | PA5
---     PA6     |13                       28 | PA7
---     GND     |14                       27 | CB1
---     PB0     |15                       26 | PB1
---     PB2     |16                       25 | PB3
---     PB4     |17                       24 | PB5
---     PB6     |18                       23 | PB7
---     IRQ     |19                       22 | CB2
---     RES     |20                       21 | VCC
---             +-------------------------+
+--                  MOS 6522 VIA
+--            +----------------------+
+--    Gnd VSS |  1                40 | CA1
+--   AYD0 PA0 |  2                39 | CA2
+--   AYD1 PA1 |  3                38 | RS0  A0
+--   AYD2 PA2 |  4                37 | RS1  A1
+--   AYD3 PA3 |  5                36 | RS2  A2
+--   AYD4 PA4 |  6                35 | RS3  A3
+--   AYD5 PA5 |  7                34 | RES  /RESET
+--   AYD6 PA6 |  8                33 | D0
+--   AYD7 PA7 |  9                32 | D1
+--    BC1 PB0 | 10                31 | D2
+--   BDIR PB1 | 11                30 | D3
+--   /RST PB2 | 12                29 | D4
+--        PB3 | 13                28 | D5
+--        PB4 | 14                27 | D6
+--        PB5 | 15                26 | D7
+--        PB6 | 16                25 | CLK2 CLK
+--        PB7 | 17                24 | CS1  A7
+--        CB1 | 18                23 | CS2  /IOSEL
+--        CB2 | 19                22 | R/W
+--   +5v  VCC | 20                21 | IRQ  /NMI
+--            +----------------------+
 -------------------------------------------------------------------------------
 
 library ieee;
