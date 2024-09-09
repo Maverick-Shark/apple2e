@@ -11,6 +11,31 @@
 -- License:     GPL 3.0 - Free to use, distribute and change to your own needs.
 --              Leaving a reference to the author will be highly appreciated.
 -------------------------------------------------------------------------------
+--                        VIA 6522
+--             +-------------------------+
+--     VCC     | 1                       40 | GND
+--     D0      | 2                       39 | D1
+--     D2      | 3                       38 | D3
+--     D4      | 4                       37 | D5
+--     D6      | 5                       36 | D7
+--     A0      | 6                       35 | A1
+--     A2      | 7                       34 | A3
+--     R/W     | 8                       33 | PHI2
+--     CA1     | 9                       32 | CA2
+--     PA0     |10                       31 | PA1
+--     PA2     |11                       30 | PA3
+--     PA4     |12                       29 | PA5
+--     PA6     |13                       28 | PA7
+--     GND     |14                       27 | CB1
+--     PB0     |15                       26 | PB1
+--     PB2     |16                       25 | PB3
+--     PB4     |17                       24 | PB5
+--     PB6     |18                       23 | PB7
+--     IRQ     |19                       22 | CB2
+--     RES     |20                       21 | VCC
+--             +-------------------------+
+-------------------------------------------------------------------------------
+
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
@@ -18,44 +43,47 @@ use ieee.std_logic_unsigned.all;
 
 entity via6522 is
 port (
-    clock       : in  std_logic;
-    rising      : in  std_logic;
-    falling     : in  std_logic;
-    reset       : in  std_logic;
+    clock       : in  std_logic;                           -- Clock signal (PHI2)
+    rising      : in  std_logic;                           -- Rising Edge Detection (trigger actions, used for detecting specific timing conditions or transitions.)
+    falling     : in  std_logic;                           -- Falling Edge Detection (trigger actions, used for detecting specific timing conditions or transitions.)
+    reset       : in  std_logic;                           -- Reset signal (RES)
     
-    addr        : in  std_logic_vector(3 downto 0);
-    wen         : in  std_logic;
-    ren         : in  std_logic;
-    data_in     : in  std_logic_vector(7 downto 0);
-    data_out    : out std_logic_vector(7 downto 0);
+    addr        : in  std_logic_vector(3 downto 0);        -- 4-bit address bus (A0 - A3)
+    wen         : in  std_logic;                           -- Write Enable. When asserted (typically '0'), it allows data to be written to the selected register.
+    ren         : in  std_logic;                           -- Read Enable. When asserted (typically '0'), it allows data to be read from the selected register.
+    data_in     : in  std_logic_vector(7 downto 0);        -- 8-bit input data bus (D0 - D8). Writes data into the VIA6522
+    data_out    : out std_logic_vector(7 downto 0);        -- 8-bit output data bus  (D0 - D8). Reads data into the VIA6522
 
     phi2_ref    : out std_logic;
 
-    -- pio --
-    port_a_o    : out std_logic_vector(7 downto 0);
-    port_a_t    : out std_logic_vector(7 downto 0);
-    port_a_i    : in  std_logic_vector(7 downto 0);
-    
-    port_b_o    : out std_logic_vector(7 downto 0);
-    port_b_t    : out std_logic_vector(7 downto 0);
-    port_b_i    : in  std_logic_vector(7 downto 0);
+    -- pio (I/O Ports) --
+    -- Port A I/O (PA0 - PA7)
+    port_a_o    : out std_logic_vector(7 downto 0);        -- Output Data
+    port_a_t    : out std_logic_vector(7 downto 0);        -- Tri-state Data
+    port_a_i    : in  std_logic_vector(7 downto 0);        -- Input Data
+    -- Port B I/O (PB0 - PB7)
+    port_b_o    : out std_logic_vector(7 downto 0);        -- Output Data       
+    port_b_t    : out std_logic_vector(7 downto 0);        -- Tri-state Data
+    port_b_i    : in  std_logic_vector(7 downto 0);        -- Input Data
 
     -- handshake pins
-    ca1_i       : in  std_logic;
+    -- Control lines for Port A (CA1, CA2)
+    ca1_i       : in  std_logic;                           -- Input Control
 
-    ca2_o       : out std_logic;
-    ca2_i       : in  std_logic;
-    ca2_t       : out std_logic;
+    ca2_o       : out std_logic;                           -- Output Control
+    ca2_i       : in  std_logic;                           -- Input Control
+    ca2_t       : out std_logic;                           -- Tri-State Control
     
-    cb1_o       : out std_logic;
-    cb1_i       : in  std_logic;
-    cb1_t       : out std_logic;
+    -- Control lines for Port B (CB1, CB2)
+    cb1_o       : out std_logic;                           -- Output Control
+    cb1_i       : in  std_logic;                           -- Input Control
+    cb1_t       : out std_logic;                           -- Tri-State Control
     
-    cb2_o       : out std_logic;
-    cb2_i       : in  std_logic;
-    cb2_t       : out std_logic;
+    cb2_o       : out std_logic;                           -- Output Control
+    cb2_i       : in  std_logic;                           -- Input Control
+    cb2_t       : out std_logic;                           -- Tri-State Control
 
-    irq         : out std_logic );
+    irq         : out std_logic );                          -- Interrupt request (IRQ)
     
 end via6522;
 
